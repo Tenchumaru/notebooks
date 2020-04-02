@@ -1,0 +1,11 @@
+mxnet-cu101mkl
+captcha
+hdbscan
+jupyter
+matplotlib
+opencv-python
+pandas
+Pillow
+scipy
+seaborn
+sklearn
