@@ -57,22 +57,19 @@ import mxnet as mx
 class StackedLSTM(mx.gluon.HybridBlock):
     def __init__(self, ctx, *, hidden_size=512, num_layers=2, output_size=11, **kwargs):
         super().__init__(**kwargs)
-        self.ctx = ctx
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         with self.name_scope():
             self.lstm = mx.gluon.rnn.LSTM(hidden_size, num_layers)
-            self.dropout = mx.gluon.nn.Dropout(0.5)
-            self.fc = mx.gluon.nn.Dense(output_size, activation='relu')
+            self.dropout = mx.gluon.nn.Dropout(rate=0.5)
+            self.fc = mx.gluon.nn.Dense(output_size) # TODO does this need flatten=False?
         self.initialize(mx.init.Xavier(), ctx)
 
     def hybrid_forward(self, F, inputs):
-        inputs = inputs.transpose((2, 0, 1)) # NxHxW -> WxNxH
         outputs = self.lstm(inputs)
         outputs = self.dropout(outputs)
         outputs = mx.ndarray.stack(*(self.fc(outputs[i]) for i in range(outputs.shape[0])))
-        outputs = mx.ndarray.log_softmax(outputs, axis=2)
-        outputs = outputs.transpose((1, 0, 2)) # WxNxP -> NxWxP
+        #outputs = mx.ndarray.log_softmax(outputs, axis=2) TODO according to CTCLoss documentation, it expects an "unnormalized prediction tensor".
         return outputs
 
 ctc_loss = mx.gluon.loss.CTCLoss(weight=0.2)
@@ -84,8 +81,10 @@ def run_epoch(ctx, epoch, network, dataloader, trainer, print_name):
         y = y.as_in_context(ctx)
         batch_size, height, width = x.shape
         with mx.autograd.record(train_mode=trainer is not None):
+            x = x.transpose((2, 0, 1)) # NxHxW -> WxNxH
             output = network(x)
-            loss_ctc = ctc_loss(output, y)
+            x = x.transpose((1, 0, 2)) # WxNxP -> NxWxP
+            loss_ctc = ctc_loss(output, y) # TODO verify input and output layouts according to documentation.
         if trainer is not None:
             loss_ctc.backward()
             trainer.step(batch_size)
@@ -114,8 +113,8 @@ def main():
     validation_dataset = zip(*it.starmap(transform, validation_data))
     validation_dataset = mx.gluon.data.dataset.ArrayDataset(*validation_dataset)
 
-    training_dataloader = mx.gluon.data.DataLoader(training_dataset, batch_size=batch_size)
-    validation_dataloader = mx.gluon.data.DataLoader(validation_dataset, batch_size=batch_size)
+    training_dataloader = mx.gluon.data.DataLoader(training_dataset, batch_size=batch_size, shuffle=True)
+    validation_dataloader = mx.gluon.data.DataLoader(validation_dataset, batch_size=batch_size, shuffle=True)
 
     ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
 
