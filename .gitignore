@@ -1,4 +1,5 @@
 *.sw[op]
+*.user
 .ipynb_checkpoints
 __pycache__/
 data/
