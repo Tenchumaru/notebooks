@@ -90,11 +90,11 @@ class StackedLSTM(nn.Module):
         self.fc = nn.Linear(hidden_size, output_size)
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers)
         
-    def forward(self, inputs, hidden):
-        seq_len, batch_size, input_size = inputs.shape
-        outputs, hidden = self.lstm(inputs, hidden)
+    def forward(self, inputs, hidden): # inputs.shape = (160, 64, 60), len(h) = 2, h[i].shape = (2, 64, 512)
+        seq_len, batch_size, input_size = inputs.shape # 160, 64, 60
+        outputs, hidden = self.lstm(inputs, hidden) # outputs.shape = (160, 64, 512), len(hidden) = 2, hidden[i].shape = (2, 64, 512)
         outputs = self.dropout(outputs)
-        outputs = torch.stack([self.fc(outputs[i]) for i in range(width)])
+        outputs = torch.stack([self.fc(outputs[i]) for i in range(width)]) # width = 160, outputs.shape = (160, 64, 11)
         outputs = F.log_softmax(outputs, dim=2)
         return outputs, hidden
     
@@ -119,41 +119,41 @@ batch_size = 64
 for epoch in range(epochs):
     train_loss, train_correct, train_total = 0, 0, 0
 
-    h = net.init_hidden(batch_size)
+    h = net.init_hidden(batch_size) # len(h) = 2, h[i].shape = (2, 64, 512), h[i] = 0
 
     # for each batch of training examples
-    for batch_index, (inputs, targets) in enumerate(train_dataloader):
+    for batch_index, (inputs, targets) in enumerate(train_dataloader): # inputs.shape = (64, 1, 60, 160), targets.shape = (64, 4)
         inputs, targets = inputs.to(device), targets.to(device)
         h = tuple([each.data for each in h])
 
-        batch_size, channels, height, width = inputs.shape
+        batch_size, channels, height, width = inputs.shape # 64, 1, 60, 160
 
         # reshape inputs: NxCxHxW -> WxNx(HxC)
         inputs = (inputs
                   .permute(3, 0, 2, 1)
                   .contiguous()
-                  .view((width, batch_size, -1)))
+                  .view((width, batch_size, -1))) # inputs.shape = (160, 64, 60)
 
         optimizer.zero_grad()  # zero the parameter gradients
-        outputs, h = net(inputs, h)  # forward pass
+        outputs, h = net(inputs, h)  # forward pass # outputs.shape = (160, 64, 11)
 
         # compare output with ground truth
-        input_lengths = torch.IntTensor(batch_size).fill_(width)
-        target_lengths = torch.IntTensor([len(t) for t in targets])
-        loss = criterion(outputs, targets.to(device), input_lengths, target_lengths)
+        input_lengths = torch.IntTensor(batch_size).fill_(width) # input_lengths.shape = (64,)
+        target_lengths = torch.IntTensor([len(t) for t in targets]) # target_lengths.shape = (64,)
+        loss = criterion(outputs, targets.to(device), input_lengths, target_lengths) # loss.shape = ()
 
         loss.backward()  # backpropagation
         nn.utils.clip_grad_norm_(net.parameters(), 10)  # clip gradients
         optimizer.step()  # update network weights
 
         # record statistics
-        prob, max_index = torch.max(outputs, dim=2)
+        prob, max_index = torch.max(outputs, dim=2) # prob.shape = (160, 64), max_index.shape = (160, 64)
         train_loss += loss.item()
         train_total += len(targets)
 
         for i in range(batch_size):
-            raw_pred = list(max_index[:, i].cpu().numpy())
-            pred = [c for c, _ in groupby(raw_pred) if c != BLANK_LABEL]
+            raw_pred = list(max_index[:, i].cpu().numpy()) # len(raw_pred) = 160
+            pred = [c for c, _ in groupby(raw_pred) if c != BLANK_LABEL] # len(pred) = 4 when predicting correctly, otherwise in [0, 160]
             target = list(targets[i].cpu().numpy())
             if pred == target:
                 train_correct += 1
