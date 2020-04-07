@@ -1,6 +1,7 @@
 *.sw[op]
 *.user
 .ipynb_checkpoints
+.vs/
 __pycache__/
 data/
 venv/
