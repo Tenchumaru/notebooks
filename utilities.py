@@ -2,6 +2,7 @@ import cv2
 import itertools as it
 import numpy as np
 import os
+import pickle
 import random
 from datetime import datetime
 
@@ -106,6 +107,18 @@ def partition(l, k):
 
 def demonstrate_partition():
     print([partition(list(range(22)), 9) for _ in range(9)])
+
+def pickle_iter(fin, is_ignoring_all=False):
+    if type(fin) is str:
+        fin = open(fin, 'rb')
+    with fin:
+        try:
+            while True:
+                yield pickle.load(fin)
+        except Exception as ex:
+            if type(ex) is EOFError or is_ignoring_all:
+                return
+            raise
 
 def prime_factors(n):
     i = 2
