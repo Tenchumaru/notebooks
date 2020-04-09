@@ -7,6 +7,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "actamachina-mxnet", "actama
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "actamachina-torch", "actamachina-torch.pyproj", "{D6747C4F-A5ED-4EC5-841D-2B1723CEF40F}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Create Dota 2 Letters", "Create Dota 2 Letters.pyproj", "{1E3C7560-9978-406E-A26D-38A6DB01E48C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,8 @@ Global
 		{76D4B69C-2E3F-464A-A259-5B70C1823A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6747C4F-A5ED-4EC5-841D-2B1723CEF40F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6747C4F-A5ED-4EC5-841D-2B1723CEF40F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E3C7560-9978-406E-A26D-38A6DB01E48C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E3C7560-9978-406E-A26D-38A6DB01E48C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
