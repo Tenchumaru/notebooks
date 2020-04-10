@@ -48,6 +48,18 @@ def fn(parameters):
             letter_factor = desired_factor[top:bottom, left + offset:right + offset]
             if letter != 'Q':
                 letter_factor[-1, :] = 0
+            def fn(image):
+                if is_tall:
+                    image = cv2.resize(image, (0, 0), fx=5, fy=5, interpolation=cv2.INTER_CUBIC)
+                    def fn(n):
+                        return np.zeros([n, image.shape[1]], dtype=np.float32)
+                    n = 1
+                    image = np.vstack([fn(n), image, fn(4 - n)])
+                else:
+                    image = cv2.resize(image, (0, 0), fx=6, fy=6, interpolation=cv2.INTER_CUBIC)
+                return image
+            letter_whiteness = fn(letter_whiteness)
+            letter_factor = fn(letter_factor)
             pickle.dump(letter, fout)
             pickle.dump(letter_whiteness, fout)
             pickle.dump(letter_factor, fout)
@@ -77,7 +89,7 @@ if __name__ == '__main__':
         with Pool() as p:
             file_paths = p.map(fn, parameters)
     else:
-        file_paths = [fn(parameters[0]), fn(parameters[1])]
+        file_paths = [fn(parameters[0]), fn(parameters[-1])]
     print()
     print('COPY /B', '+'.join(file_paths), f'"{file_path}"')
     for file_path in file_paths:
