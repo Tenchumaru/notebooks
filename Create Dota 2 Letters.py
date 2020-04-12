@@ -21,13 +21,16 @@ def fn(parameters):
         # dimensional tensor.
         images = np.stack(images, axis=0)
 
-        # Determine the desired whiteness by computing the mean of all whiteness.
-        desired_whiteness = np.mean(images, axis=0)
-        print(desired_whiteness.shape, desired_whiteness.min(), desired_whiteness.max())
-        yield desired_whiteness
+        # Set the desired brightness to the dimmest image that has the
+        # brightest pixels.
+        images_ = [i for i in images if i.max() >= 1]
+        images_ = np.stack(images_, axis=0)
+        desired_brightness = images_[np.argmin(np.sum(images_, axis=(1, 2)))]
+        print(desired_brightness.shape, desired_brightness.min(), desired_brightness.max())
+        yield desired_brightness
 
         # Determine the desired factor by scaling the range of standard deviations
-        # of all whiteness from [min, max] to [1, 0].
+        # of all brightness from [min, max] to [1, 0].
         std = np.std(images, axis=0)
         desired_factor = (std - np.max(std)) / (np.min(std) - np.max(std))
 
@@ -40,11 +43,11 @@ def fn(parameters):
 
     file_title, is_tall, offset, pairs = parameters
     top, bottom = 4 if is_tall else 5, 14
-    desired_whiteness, desired_factor = fn(file_title)
+    desired_brightness, desired_factor = fn(file_title)
     with NamedTemporaryFile(delete=False) as fout:
         file_path = fout.name
         for letter, left, right in pairs:
-            letter_whiteness = desired_whiteness[top:bottom, left + offset:right + offset]
+            letter_brightness = desired_brightness[top:bottom, left + offset:right + offset]
             letter_factor = desired_factor[top:bottom, left + offset:right + offset]
             if letter != 'Q':
                 letter_factor[-1, :] = 0
@@ -58,10 +61,10 @@ def fn(parameters):
                 else:
                     image = cv2.resize(image, (0, 0), fx=6, fy=6, interpolation=cv2.INTER_CUBIC)
                 return image
-            letter_whiteness = fn(letter_whiteness)
+            letter_brightness = fn(letter_brightness)
             letter_factor = fn(letter_factor)
             pickle.dump(letter, fout)
-            pickle.dump(letter_whiteness, fout)
+            pickle.dump(letter_brightness, fout)
             pickle.dump(letter_factor, fout)
     return file_path
 
