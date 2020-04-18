@@ -1,5 +1,6 @@
 import cv2
 import itertools as it
+import math
 import numpy as np
 import os
 import pickle
@@ -8,6 +9,11 @@ from datetime import datetime
 
 random.seed(9)
 np.random.seed(9)
+
+def create_square_image(images, aspect_ratio=1):
+    image = np.zeros_like(images[0])
+    width = math.ceil(math.sqrt(len(images) * aspect_ratio))
+    return np.vstack([np.hstack((images[i:i+width] + [image] * width)[:width]) for i in range(0, len(images), width)])
 
 def get_file_names(input_directory_path):
     _, _, file_names = next(os.walk(input_directory_path), (None, None, []))
