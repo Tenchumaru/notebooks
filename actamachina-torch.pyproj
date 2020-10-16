@@ -25,7 +25,7 @@
     <Compile Include="actamachina-torch.py" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="venv\">
+    <Interpreter Include="..\venv\">
       <Id>venv</Id>
       <Version>3.7</Version>
       <Description>venv (Python 3.7 (64-bit))</Description>
