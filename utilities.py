@@ -1,6 +1,7 @@
 import cv2
 import itertools as it
 import math
+import mxnet.ndarray as nd
 import numpy as np
 import os
 import pickle
@@ -9,6 +10,13 @@ from datetime import datetime
 
 random.seed(9)
 np.random.seed(9)
+
+def Grayscale(image):
+    if getattr(image, 'shape', None) is None:
+        image = np.array(list(image.getdata())).reshape((image.height, image.width, 3))
+    image = cv2.cvtColor(image.astype(np.uint8), cv2.COLOR_RGB2GRAY)
+    image = image[:, :, np.newaxis]
+    return nd.array(image)
 
 def create_square_image(images, aspect_ratio=1):
     image = np.zeros_like(images[0])

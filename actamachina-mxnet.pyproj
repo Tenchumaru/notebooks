@@ -26,6 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="actamachina-mxnet.py" />
+    <Compile Include="utilities.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="..\venv\">
