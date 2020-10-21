@@ -4,7 +4,7 @@
 # pip install captcha
 # pip install opencv-python
 # pip install Pillow
-# pip install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
+# pip install torch===1.6.0 torchvision===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
 
 from itertools import groupby
 from pathlib import Path
@@ -90,7 +90,7 @@ class StackedLSTM(nn.Module):
         self.fc = nn.Linear(hidden_size, output_size)
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers)
         
-    def forward(self, inputs, hidden): # inputs.shape = (160, 64, 60), len(h) = 2, h[i].shape = (2, 64, 512)
+    def forward(self, inputs, hidden): # inputs.shape = (160, 64, 60), len(hidden) = 2, hidden[i].shape = (2, 64, 512)
         seq_len, batch_size, input_size = inputs.shape # 160, 64, 60
         outputs, hidden = self.lstm(inputs, hidden) # outputs.shape = (160, 64, 512), len(hidden) = 2, hidden[i].shape = (2, 64, 512)
         outputs = self.dropout(outputs)
