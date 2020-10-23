@@ -25,6 +25,7 @@ from captcha.image import ImageCaptcha
 
 import os
 pickle_file_path = 'data/captcha10000.pickle'
+parameter_file_path = 'data/actamachina-mxnet.params'
 batch_size = 64
 if os.path.isfile(pickle_file_path):
     with open(pickle_file_path, 'rb') as fin:
@@ -75,7 +76,7 @@ class StackedLSTM(gluon.HybridBlock):
         return self
 
 net = StackedLSTM().to(device)
-
+if os.path.isfile(parameter_file_path): net.load_parameters(parameter_file_path)
 criterion = gluon.loss.CTCLoss(layout='TNC')
 optimizer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': 0.01})
 
@@ -85,7 +86,7 @@ BLANK_LABEL = 10
 
 epochs = 30
 batch_size = 64
-
+best_train_loss = None
 # for each pass of the training dataset
 for epoch in range(epochs):
     train_loss, train_correct, train_total = 0, 0, 0
@@ -136,6 +137,12 @@ for epoch in range(epochs):
                   f'Train Loss: {float(train_loss.asnumpy()):.5f}, ' +
                   f'Train Accuracy: {(train_correct/train_total):.5f}')
 
+            if best_train_loss is None:
+                best_train_loss = train_loss
+            elif train_loss < best_train_loss:
+                best_train_loss = train_loss
+                print('saving parameters')
+                net.save_parameters(parameter_file_path)
             train_loss, train_correct, train_total = 0, 0, 0
 
 #h = net.init_hidden(batch_size)  # init hidden state
