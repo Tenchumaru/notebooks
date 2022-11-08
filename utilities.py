@@ -1,7 +1,6 @@
 import cv2
 import itertools as it
 import math
-import mxnet.ndarray as nd
 import numpy as np
 import os
 import pickle
