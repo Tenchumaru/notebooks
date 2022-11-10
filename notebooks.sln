@@ -1,13 +1,8 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29905.134
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "actamachina-mxnet", "actamachina-mxnet.pyproj", "{76D4B69C-2E3F-464A-A259-5B70C1823A42}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "actamachina-torch", "actamachina-torch.pyproj", "{D6747C4F-A5ED-4EC5-841D-2B1723CEF40F}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Create Dota 2 Letters", "Create Dota 2 Letters.pyproj", "{1E3C7560-9978-406E-A26D-38A6DB01E48C}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Create Dota 2 Letters", "Dota 2\Create Dota 2 Letters.pyproj", "{1E3C7560-9978-406E-A26D-38A6DB01E48C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +10,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{76D4B69C-2E3F-464A-A259-5B70C1823A42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76D4B69C-2E3F-464A-A259-5B70C1823A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6747C4F-A5ED-4EC5-841D-2B1723CEF40F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6747C4F-A5ED-4EC5-841D-2B1723CEF40F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E3C7560-9978-406E-A26D-38A6DB01E48C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E3C7560-9978-406E-A26D-38A6DB01E48C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
