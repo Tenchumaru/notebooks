@@ -10,6 +10,16 @@ from datetime import datetime
 random.seed(9)
 np.random.seed(9)
 
+class Timer:
+    def __init__(self, message: str):
+        self.__message = message
+
+    def __enter__(self):
+        self.__start_at = datetime.now()
+
+    def __exit__(self, *args):
+        print(f'{self.__message} time:', (datetime.now() - self.__start_at).total_seconds(), 'seconds')
+
 def Grayscale(image):
     if getattr(image, 'shape', None) is None:
         image = np.array(list(image.getdata())).reshape((image.height, image.width, 3))
