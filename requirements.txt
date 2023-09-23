@@ -1,9 +1,8 @@
-captcha
 hdbscan
+igraph
 jupyter
-matplotlib
+networkx
 pandas
 scipy
 seaborn
-six
-sklearn
+scikit-learn
