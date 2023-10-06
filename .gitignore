@@ -1,3 +1,4 @@
+*.pt*
 *.sw[op]
 *.user
 .ipynb_checkpoints
