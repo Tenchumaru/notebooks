@@ -1,8 +1,29 @@
+# Use the PyTorch CUDA 12.8 wheel index for torch-related packages
+--index-url https://download.pytorch.org/whl/cu128
+--extra-index-url https://pypi.org/simple
+
+# Core PyTorch stack
+torch
+torchvision
+#torchaudio # not required yet
+
+# Streamlink for access to Twitch channels
+streamlink
+
+# Other packages
+captcha
 hdbscan
-igraph
 jupyter
+m3u8
+matplotlib
 networkx
+opencv-python
 pandas
+Pillow
+python-ffmpeg
+requests
 scipy
 seaborn
+six
 scikit-learn
+wheel
