@@ -25,7 +25,7 @@ def Grayscale(image):
         image = np.array(list(image.getdata())).reshape((image.height, image.width, 3))
     image = cv2.cvtColor(image.astype(np.uint8), cv2.COLOR_RGB2GRAY)
     image = image[:, :, np.newaxis]
-    return nd.array(image)
+    return image
 
 def create_square_image(images, aspect_ratio=1):
     image = np.zeros_like(images[0])
