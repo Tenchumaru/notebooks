@@ -153,3 +153,6 @@ def prime_factors(n):
             yield i
     if n > 1:
         yield n
+
+def put_text(image: np.ndarray, text: str, x: int, y: int, *, scale: int=1, color: tuple[int, int, int]=(255,), thickness: int=2) -> None:
+    cv2.putText(image, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, scale, color, thickness)
