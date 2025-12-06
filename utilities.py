@@ -29,7 +29,8 @@ def Grayscale(image):
 
 def create_square_image(images, aspect_ratio=1):
     image = np.zeros_like(images[0])
-    width = math.ceil(math.sqrt(len(images) * aspect_ratio))
+    nrows, ncolumns, _ = images[0].shape
+    width = math.ceil(math.sqrt(len(images) * aspect_ratio * nrows / ncolumns))
     return np.vstack([np.hstack((images[i:i+width] + [image] * width)[:width]) for i in range(0, len(images), width)])
 
 def get_file_names(input_directory_path):
@@ -54,8 +55,13 @@ def read_and_wait(video, title='tesst', wait_time=0):
 
 def play_video(video, title='tesst', starting_index=0, wait_time=25):
     if video.set(cv2.CAP_PROP_POS_FRAMES, starting_index):
-        while read_and_wait(video, title, wait_time) != 'q':
-            continue
+        while True:
+            result, frame = video.read()
+            if result:
+                return show_and_wait(frame, title, wait_time)
+            else:
+                break
+        cv2.destroyAllWindows()
 
 def for_plt(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # image.take([2, 1, 0], axis=2)
